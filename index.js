@@ -5,8 +5,8 @@ const cors = require('cors')
 require('dotenv').config()
 
 const http = require('http');
-const { Server } = require("socket.io");
-const socketServer = require('./socket-server')
+// const { Server } = require("socket.io");
+// const socketServer = require('./socket-server')
 
 const setupRouter = require('./src/routes')
 // const db = require('./src/services/db.service')
@@ -39,13 +39,13 @@ app.use(( err, req, res, next) => {
 });
 
 const server = http.createServer(app);
-const io = new Server(server,{
-    cors: {
-      origin: [process.env.CLIENT_URL||"http://localhost:3001", "http://localhost:3001"],
-      credentials: true
-    }
-  });
-socketServer(io)
+// const io = new Server(server,{
+//     cors: {
+//       origin: [process.env.CLIENT_URL||"http://localhost:3001", "http://localhost:3001"],
+//       credentials: true
+//     }
+//   });
+// socketServer(io)
 
 server.listen(3000, () => {
     console.log(`Server is running on PORT ${port}`);
