@@ -40,23 +40,10 @@ async function addImages(postId, imageUrl) {
 }
 
 async function deleteAll(postId) {
-     const imageList = (await getImages(postId)).data
-    // const imageList = [
-    //     { image_id: 96, image_url: '/static/4-11-2022/1667529831995_1.png' },
-    //     { image_id: 97, image_url: '/static/4-11-2022/1667529832000_1.png' },
-    // ]
-
-    for (let image of imageList) {
-        const path = image.image_url.replace('/static', 'src/public')
-        fs.unlinkSync(path)
-    }
-    await db.query(
-      `DELETE FROM image WHERE image.post_id = ?`,
-          [postId]
-    );
+    await db.query(`DELETE FROM image WHERE image.post_id = ?`, [postId])
 
     return {
-        message: "Delete all images successfully",
+        message: 'Delete all images successfully',
     }
 }
 

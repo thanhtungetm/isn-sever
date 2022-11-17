@@ -40,6 +40,48 @@ async function getAllPosts(userId) {
         data,
     }
 }
+async function getFriendPosts(userId) {
+    const rows = await db.query(
+        `SELECT post.post_id,users.user_name, users.user_fullname, users.user_avatar, aspect, post.created_at
+        from post, users
+        where post.user_id=users.user_id
+        and 
+        (post.user_id IN (
+            SELECT users.user_id FROM friend,users WHERE friend.user_id_2 = users.user_id and friend.user_id_1 = ?
+        )
+         or post.user_id = ? or post.user_id = 1
+        )
+        ORDER BY post.created_at DESC`,
+        [userId, userId]
+    )
+    const data = helper.emptyOrRows(rows)
+
+    for (let post of data) {
+        const images = await imagesService.getImages(post.post_id)
+        const likeData = await reactionService.getLikes(post.post_id, userId)
+        const commentCount = await commentService.getCommentCount(post.post_id)
+        const comment = await commentService.getFristComment(post.post_id)
+
+        post.total_comments = commentCount
+        post.comment = comment
+        post.likeData = likeData
+
+        post.images = images.data
+        // post.images = images.data
+        const date = new Date(post.created_at)
+        post.time_distance = helper.getDistanceTime(date)
+
+        //additional information
+        // {
+        //   total_post,
+        //   recent_images,
+        // }
+    }
+
+    return {
+        data,
+    }
+}
 async function getById(userId, postId) {
     const rows = await db.query(
         `SELECT post.post_id,users.user_name, users.user_fullname, users.user_avatar, aspect, post.created_at
@@ -179,9 +221,9 @@ async function deleteAllSaved(postId) {
     }
 }
 async function remove(userId, postId) {
-    // await imagesService.deleteAll(postId)
+    await imagesService.deleteAll(postId)
     await reactionService.deleteAll(postId)
-    await deleteAllSaved(postId)
+    // await deleteAllSaved(postId)
     await commentService.deleteAll(postId)
     await db.query(`DELETE FROM post where post.post_id = ?`, [postId])
 
@@ -190,6 +232,7 @@ async function remove(userId, postId) {
 
 module.exports = {
     getAllPosts,
+    getFriendPosts,
     getTotalOfUserId,
     getById,
     create,

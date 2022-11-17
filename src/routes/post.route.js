@@ -4,6 +4,7 @@ const router = express.Router();
 const postController = require('../controllers/post.controller')
 
 router.get('/', postController.get)
+router.get('/friend', postController.getFriend)
 router.post('/',  postController.create)
 router.get('/liked', postController.getLikedPosts)
 router.get('/mentioned', postController.getMentionedPosts)

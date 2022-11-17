@@ -11,6 +11,15 @@ async function get(req, res, next) {
     next(err);
   }
 }
+async function getFriend(req, res, next) {
+  try {
+    const userId = req.userId
+    res.json(await postServices.getFriendPosts(userId));
+  } catch (err) {
+    console.error(`Error while get posts`, err.message);
+    next(err);
+  }
+}
 async function getById(req, res, next) {
   try {
     const userId = req.userId
@@ -94,4 +103,5 @@ module.exports = {
   remove,
   getLikedPosts,
   getMentionedPosts,
+  getFriend,
 };
