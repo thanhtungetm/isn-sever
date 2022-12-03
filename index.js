@@ -9,12 +9,12 @@ const { Server } = require("socket.io");
 const socketServer = require('./socket-server')
 
 const setupRouter = require('./src/routes')
-const db = require('./src/services/db.service')
+// const db = require('./src/services/db.service')
 
 const app = express()
 const port = process.env.PORT || 3000
 
-db.connect()
+// db.connect()
 
 app.use(cors())
 
