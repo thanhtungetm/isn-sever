@@ -1,5 +1,5 @@
 const postServices = require("../services/post.service");
-const fs = require("node:fs");
+// const fs = require("node:fs");
 const helpers = require('../utils/helper.util')
 
 async function get(req, res, next) {
